@@ -28,6 +28,7 @@ wsServer.on("request", function (req) {
 
 	//accept the new connection request
 	//todo: filter request to only allowed origins
+	console.log("request", req);
 	const connection = req.accept(null, req.origin);
 
 	// add the new connection to the clients list
@@ -38,13 +39,17 @@ wsServer.on("request", function (req) {
 
 	// message handler
 	connection.on("message", function (msg) {
+		console.log(msg);
 		if (msg.type === "utf8") {
 			console.log("Received Msg:", msg.utf8Data);
-
+			let themsg = JSON.parse(msg.utf8Data);
+			console.log(themsg);
 			// broadcast the message to all connected clients
-			for (key in clients) {
-				clients[key].sendUTF(msg.utf8Data);
-				// console.log("Sent message to :", clients);
+			if (themsg.identifier == undefined || themsg.identifier != "notice") {
+				for (key in clients) {
+					clients[key].sendUTF(JSON.stringify(themsg));
+					// console.log("Sent message to :", clients);
+				}
 			}
 		}
 	});

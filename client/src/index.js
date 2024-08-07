@@ -14,11 +14,18 @@ export const App = () => {
 
 	// Connect to the websocket server on
 	client.onopen = () => {
+		client.send(
+			JSON.stringify({
+				identifier: "notice",
+				user: "asdasda98asugkasud",
+			})
+		);
 		console.log("Connected to websocket");
 	};
 
 	useEffect(() => {
 		client.onmessage = (msg) => {
+			console.log(msg);
 			const dataFromServer = JSON.parse(msg.data);
 			console.log(`FROM SERVER:`, dataFromServer);
 			if (dataFromServer.type === "message") {
@@ -65,9 +72,9 @@ export const App = () => {
 									textAlign: `${username === msg.user ? "right" : "left"}`,
 								}}
 							>
-								<span style={{ fontSize: "20px;" }}>{msg.msg}</span>
+								<span style={{ fontSize: "20px" }}>{msg.msg}</span>
 								<br />
-								<span style={{ fontSize: "10px;" }}>{msg.user}</span>
+								<span style={{ fontSize: "10px" }}>{msg.user}</span>
 							</p>
 						))}
 					</div>
